@@ -31,7 +31,7 @@ if '%errorlevel%' NEQ '0' (
 schtasks.exe /delete /tn lockscreenchange /F >nul 2>&1
 schtasks.exe /delete /tn desktopbackgroundchange /F >nul 2>&1
 for /f "delims=" %%a in ('powershell -command "echo $pwd"') do Set "$Value=%%a"
-for /f "delims=" %%a in ('powershell -command "[xml] $test = get-content .\lock_screen_change_template; $test.Task.Actions.Exec.Arguments"') do Set "$current=%%a"
+for /f "delims=" %%a in ('powershell -command "[xml] $test = get-content .\win_scheduler_templates\lock_screen_change_template; $test.Task.Actions.Exec.Arguments"') do Set "$current=%%a"
 set folder=%$current%
 if "%$current%"=="" set folder=%$Value%\backgrounds
 :question
@@ -62,7 +62,7 @@ exit
 set /p folder= Please enter the Path to your preferred Picture Folder: 
 ::no label being executed after yes label
 :finish
-powershell.exe -ExecutionPolicy Bypass -file ".\setup.ps1" "%folder%"
-schtasks.exe /Create /XML .\lock_screen_change_template /tn lockscreenchange
-schtasks.exe /Create /XML .\desktop_background_change_template /tn desktopbackgroundchange 
+powershell.exe -ExecutionPolicy Bypass -file ".\main.ps1" "%folder%"
+schtasks.exe /Create /XML .\win_scheduler_templates\lock_screen_change_template /tn lockscreenchange
+schtasks.exe /Create /XML .\win_scheduler_templates\desktop_background_change_template /tn desktopbackgroundchange 
 pause
